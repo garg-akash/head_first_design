@@ -33,6 +33,7 @@ class command
 public:
 	command(){}
 	virtual void execute() = 0;	
+	virtual void undo() = 0;
 };
 
 class LightOn : public command
@@ -46,6 +47,10 @@ public:
 	void execute()
 	{
 		l->on();
+	}
+	void undo()
+	{
+		l->off();
 	}	
 };
 
@@ -60,6 +65,10 @@ public:
 	void execute()
 	{
 		l->off();
+	}
+	void undo()
+	{
+		l->on();
 	}	
 };
 
@@ -76,6 +85,10 @@ public:
 	{
 		g->up();
 	}	
+	void undo()
+	{
+		g->down();
+	}
 };
 
 class GarageDown : public command
@@ -90,6 +103,10 @@ public:
 	{
 		g->down();
 	}	
+	void undo()
+	{
+		g->up();
+	}
 };
 
 /**********************************/
@@ -98,6 +115,7 @@ class remoteControl
 {
 	command** con;
 	command** coff;
+	command* lastCommand;
 public:
 	remoteControl()
 	{
@@ -117,11 +135,17 @@ public:
 	void onButtonPress(int slot)
 	{
 		con[slot]->execute();
+		lastCommand = con[slot];
 	}
 	void offButtonPress(int slot)
 	{
 		coff[slot]->execute();
+		lastCommand = coff[slot];
 	}	
+	void undoButtonPresses()
+	{
+		lastCommand->undo();
+	}
 };
 
 int main(int argc, char const *argv[])
@@ -140,6 +164,7 @@ int main(int argc, char const *argv[])
 
 	rc->onButtonPress(0);
 	rc->offButtonPress(0);
+	rc->undoButtonPresses();
 
 	rc->onButtonPress(1);
 	rc->offButtonPress(1);

@@ -36,6 +36,35 @@ public:
 	virtual void undo() = 0;
 };
 
+/***********************************/
+
+class MacroCommand : public command
+{
+	command** commands;
+	int sz;
+public:
+	MacroCommand(command** commands)
+	{
+		sz = sizeof(commands)/sizeof(commands[0]);
+		this->commands = new command*[sz];
+		this->commands = commands;
+		// std::cout << "sz : " << sz;
+	}
+
+	void execute()
+	{
+		for(int i = 0; i <= sz; i++)
+			commands[i]->execute();
+	}
+	
+	void undo()
+	{
+		for(int i = 0; i <= sz; i++)
+			commands[i]->undo();
+	}
+};
+/***********************************/
+
 class LightOn : public command
 {
 	Light* l;
@@ -159,7 +188,7 @@ int main(int argc, char const *argv[])
 	GarageUp* gup = new GarageUp(garage);
 	GarageDown* gdown = new GarageDown(garage);
 	
-	rc->setCommand(0,lon,loff);
+	/*rc->setCommand(0,lon,loff);
 	rc->setCommand(1,gup,gdown);
 
 	rc->onButtonPress(0);
@@ -167,6 +196,15 @@ int main(int argc, char const *argv[])
 	rc->undoButtonPresses();
 
 	rc->onButtonPress(1);
-	rc->offButtonPress(1);
+	rc->offButtonPress(1);*/
+
+	//party command
+	command* partyon[] = {lon,gup};
+	command* partyoff[] = {loff,gdown};
+	MacroCommand* mcmd_on = new MacroCommand(partyon);
+	MacroCommand* mcmd_off = new MacroCommand(partyoff);
+	rc->setCommand(0,mcmd_on,mcmd_off);
+	rc->onButtonPress(0);
+	rc->offButtonPress(0);
 	return 0;
 }

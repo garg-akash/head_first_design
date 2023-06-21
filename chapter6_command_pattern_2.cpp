@@ -188,7 +188,8 @@ int main(int argc, char const *argv[])
 	GarageUp* gup = new GarageUp(garage);
 	GarageDown* gdown = new GarageDown(garage);
 	
-	/*rc->setCommand(0,lon,loff);
+	rc->setCommand(0,lon,loff);
+	// rc->setCommand(0,[](){light->on();},[](){light->off();}) // does not work
 	rc->setCommand(1,gup,gdown);
 
 	rc->onButtonPress(0);
@@ -196,15 +197,15 @@ int main(int argc, char const *argv[])
 	rc->undoButtonPresses();
 
 	rc->onButtonPress(1);
-	rc->offButtonPress(1);*/
+	rc->offButtonPress(1);
 
 	//party command
-	command* partyon[] = {lon,gup};
+/*	command* partyon[] = {lon,gup};
 	command* partyoff[] = {loff,gdown};
 	MacroCommand* mcmd_on = new MacroCommand(partyon);
 	MacroCommand* mcmd_off = new MacroCommand(partyoff);
 	rc->setCommand(0,mcmd_on,mcmd_off);
 	rc->onButtonPress(0);
-	rc->offButtonPress(0);
+	rc->offButtonPress(0);*/
 	return 0;
 }

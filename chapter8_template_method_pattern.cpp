@@ -10,7 +10,8 @@ public:
 		boilWater();
 		brew();
 		pourInCup();
-		addCondiments(); 
+		if(customerWantsCondiment())
+			addCondiments(); 
 	}
 
 	virtual void brew() = 0;
@@ -25,6 +26,14 @@ public:
 	{
 		cout << "Pouring in cup\n";
 	}
+
+	virtual bool customerWantsCondiment()
+	{
+		char ans;
+		cout << "Would you like to add condiments?(y/n)\n";
+		cin >> ans;
+		return ans == 'y';
+	}
 };
 
 class Tea : public CaffeineBeverage
@@ -38,6 +47,11 @@ public:
 	void addCondiments()
 	{
 		cout << "Adding lemon\n";
+	}
+
+	bool customerWantsCondiment()
+	{
+		return true;
 	}
 };
 

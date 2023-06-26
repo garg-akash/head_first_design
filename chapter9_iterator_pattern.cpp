@@ -4,7 +4,6 @@
 using namespace std;
 
 template <typename T>
-
 class Iterator
 {
 public:
@@ -46,17 +45,20 @@ public:
 	}
 };
 
-class DinnerMenuIterator : public Iterator
+template<typename T>
+class DinnerMenuIterator : public Iterator<T>
 {
 	MenuItem* items;
+	int len;
 	int position{0};
 public:
-	DinnerMenuIterator(MenuItem* items) : items(items)
+	DinnerMenuIterator(MenuItem* items, int len) : items(items), len(len)
 	{}
 
 	bool hasNext()
 	{
-		if(position >= items->size() || items[position] == NULL)
+		// if(position >= len || items[position] == NULL)
+		if(position >= len)
 			return false;
 		else
 			return true;
@@ -99,9 +101,10 @@ public:
 	// 	sz = numItems;	
 	// }
 
-	DinnerMenuIterator* createIterator()
+	DinnerMenuIterator<MenuItem>* createIterator()
 	{
-		return new DinnerMenuIterator(menuItems);
+		DinnerMenuIterator<MenuItem>* diter  = new DinnerMenuIterator<MenuItem>(menuItems,numItems);
+		return diter; 
 	}
 };
 
@@ -120,7 +123,7 @@ void printMenu(Iterator<MenuItem>* iter)
 
 void printMenu(DinnerMenu* dmenu)
 {
-	DinnerMenuIterator* diter = dmenu->createIterator();
+	DinnerMenuIterator<MenuItem>* diter = dmenu->createIterator();
 	cout << "Printing Dinner Menu : \n";
 	printMenu(diter);
 }

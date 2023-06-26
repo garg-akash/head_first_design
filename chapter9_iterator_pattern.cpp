@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -70,6 +71,36 @@ public:
 	}
 };
 
+template<typename T>
+class PancakeMenuIterator : public Iterator<T>
+{
+	vector<MenuItem> items;
+	int len;
+	int position{0};
+public:
+	PancakeMenuIterator(vector<MenuItem>& it, int len)
+	{
+		this->len = len;
+		// items.resize(it.size());
+		items = it;
+	}
+
+	bool hasNext()
+	{
+		if(position >= len)
+			return false;
+		else
+			return true;
+	}
+
+	MenuItem next()
+	{
+		return (items[position++]);
+	}
+};
+
+/**************iterator definitions over****************/
+
 class DinnerMenu
 {
 	const static int max_size{10};
@@ -108,9 +139,44 @@ public:
 	}
 };
 
+/***************Dinner menu definition over**************/
+
+class PancakeMenu
+{
+	const static int max_size{10};
+	int numItems{0};
+	vector<MenuItem> menuItems;
+
+public:
+	PancakeMenu()
+	{
+		menuItems.resize(max_size);		
+		addItem("Berries PC","lele",true,8.99);	
+		addItem("Egg PC","lele",false,9.99);
+	}
+
+	void addItem(string n, string d, bool v, double p)
+	{
+		MenuItem* m = new MenuItem(n,d,v,p);
+		if(numItems >= max_size)
+			throw("Max size exceeded\n");
+		else
+			menuItems[numItems++] = *m;
+	}
+
+	PancakeMenuIterator<MenuItem>* createIterator()
+	{
+		PancakeMenuIterator<MenuItem>* piter  = new PancakeMenuIterator<MenuItem>(menuItems,numItems);
+		return piter; 
+	}
+};
+
+/***************Pancake menu definition over**************/
+
 class Waitress
 {
 	DinnerMenu* dmenu;
+	PancakeMenu* pmenu;
 
 	void printMenu(Iterator<MenuItem>* iter)
 	{
@@ -126,21 +192,28 @@ class Waitress
 	}
 
 public:
-	Waitress(DinnerMenu* dm) : dmenu(dm)
+	Waitress(DinnerMenu* dm, PancakeMenu* pm) : dmenu(dm), pmenu(pm)
 	{}
 	void printMenu()
 	{
 		DinnerMenuIterator<MenuItem>* diter = dmenu->createIterator();
 		cout << "Printing Dinner Menu : \n";
 		printMenu(diter);
+
+		PancakeMenuIterator<MenuItem>* piter = pmenu->createIterator();
+		cout << "Printing Pancake Menu : \n";
+		printMenu(piter);
 	}
 };
+
+/***************Waitress definition over**************/
 
 int main(int argc, char const *argv[])
 {
 	DinnerMenu* dmenu = new DinnerMenu;
+	PancakeMenu* pmenu = new PancakeMenu;
 
-	Waitress* waitress = new Waitress(dmenu);
+	Waitress* waitress = new Waitress(dmenu,pmenu);
 	waitress->printMenu();
 
 	return 0;

@@ -108,30 +108,40 @@ public:
 	}
 };
 
-void printMenu(Iterator<MenuItem>* iter)
+class Waitress
 {
-	while(iter->hasNext())
-	{
-		MenuItem item = iter->next();
-		cout << item.getName() << "\n";
-		cout << item.getDescription() << "\n";
-		cout << item.isVeg() << "\n";
-		cout << item.getPrice() << "\n";
-		cout << "----\n";
-	}
-}
+	DinnerMenu* dmenu;
 
-void printMenu(DinnerMenu* dmenu)
-{
-	DinnerMenuIterator<MenuItem>* diter = dmenu->createIterator();
-	cout << "Printing Dinner Menu : \n";
-	printMenu(diter);
-}
+	void printMenu(Iterator<MenuItem>* iter)
+	{
+		while(iter->hasNext())
+		{
+			MenuItem item = iter->next();
+			cout << item.getName() << "\n";
+			cout << item.getDescription() << "\n";
+			cout << item.isVeg() << "\n";
+			cout << item.getPrice() << "\n";
+			cout << "----\n";
+		}
+	}
+
+public:
+	Waitress(DinnerMenu* dm) : dmenu(dm)
+	{}
+	void printMenu()
+	{
+		DinnerMenuIterator<MenuItem>* diter = dmenu->createIterator();
+		cout << "Printing Dinner Menu : \n";
+		printMenu(diter);
+	}
+};
 
 int main(int argc, char const *argv[])
 {
 	DinnerMenu* dmenu = new DinnerMenu;
-	printMenu(dmenu);
+
+	Waitress* waitress = new Waitress(dmenu);
+	waitress->printMenu();
 
 	return 0;
 }

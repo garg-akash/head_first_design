@@ -4,6 +4,7 @@
 
 using namespace std;
 
+/*iterator base class*/
 template <typename T>
 class Iterator
 {
@@ -12,6 +13,7 @@ public:
 	virtual T next() = 0;
 };
 
+/*Menu item base class*/
 class MenuItem
 {
 	string name;
@@ -45,6 +47,16 @@ public:
 		return price;
 	}
 };
+
+/*Menu base class*/
+class Menu
+{
+public:
+	virtual void addItem(string,string, bool, double) = 0;
+	virtual Iterator<MenuItem>* createIterator() = 0;
+};
+
+/*Base classes definition over*/
 
 template<typename T>
 class DinnerMenuIterator : public Iterator<T>
@@ -101,7 +113,7 @@ public:
 
 /**************iterator definitions over****************/
 
-class DinnerMenu
+class DinnerMenu : public Menu
 {
 	const static int max_size{10};
 	int numItems{0};
@@ -141,7 +153,7 @@ public:
 
 /***************Dinner menu definition over**************/
 
-class PancakeMenu
+class PancakeMenu : public Menu
 {
 	const static int max_size{10};
 	int numItems{0};
@@ -175,8 +187,8 @@ public:
 
 class Waitress
 {
-	DinnerMenu* dmenu;
-	PancakeMenu* pmenu;
+	Menu* dmenu;
+	Menu* pmenu;
 
 	void printMenu(Iterator<MenuItem>* iter)
 	{
@@ -192,15 +204,15 @@ class Waitress
 	}
 
 public:
-	Waitress(DinnerMenu* dm, PancakeMenu* pm) : dmenu(dm), pmenu(pm)
+	Waitress(Menu* dm, Menu* pm) : dmenu(dm), pmenu(pm)
 	{}
 	void printMenu()
 	{
-		DinnerMenuIterator<MenuItem>* diter = dmenu->createIterator();
+		Iterator<MenuItem>* diter = dmenu->createIterator();
 		cout << "Printing Dinner Menu : \n";
 		printMenu(diter);
 
-		PancakeMenuIterator<MenuItem>* piter = pmenu->createIterator();
+		Iterator<MenuItem>* piter = pmenu->createIterator();
 		cout << "Printing Pancake Menu : \n";
 		printMenu(piter);
 	}
@@ -210,8 +222,8 @@ public:
 
 int main(int argc, char const *argv[])
 {
-	DinnerMenu* dmenu = new DinnerMenu;
-	PancakeMenu* pmenu = new PancakeMenu;
+	Menu* dmenu = new DinnerMenu;
+	Menu* pmenu = new PancakeMenu;
 
 	Waitress* waitress = new Waitress(dmenu,pmenu);
 	waitress->printMenu();

@@ -109,6 +109,32 @@ public:
 	}
 };
 
+template<typename T>
+class MenusIterator : public Iterator<T>
+{
+	vector<Menu*> items;
+	vector<Menu*>::iterator iter;
+public:
+	MenusIterator(vector<Menu*>& it)
+	{
+		this->items = it;
+
+		iter = this->items.begin();
+	}
+
+	bool hasNext()
+	{
+		return (iter < items.end());
+	}
+
+	Menu* next()
+	{
+		auto res = *iter;
+		iter++;
+		return res;
+	}
+};
+
 /**************iterator definitions over****************/
 
 class DinnerMenu : public Menu
@@ -187,8 +213,7 @@ public:
 
 class Waitress
 {
-	Menu* dmenu;
-	Menu* pmenu;
+	vector<Menu*> menus;
 
 	void printMenu(Iterator<MenuItem>* iter)
 	{
@@ -204,17 +229,17 @@ class Waitress
 	}
 
 public:
-	Waitress(Menu* dm, Menu* pm) : dmenu(dm), pmenu(pm)
+	Waitress(vector<Menu*> menuz) : menus(menuz)
 	{}
 	void printMenu()
 	{
-		Iterator<MenuItem>* diter = dmenu->createIterator();
-		cout << "Printing Dinner Menu : \n";
-		printMenu(diter);
-
-		Iterator<MenuItem>* piter = pmenu->createIterator();
-		cout << "Printing Pancake Menu : \n";
-		printMenu(piter);
+		Iterator<Menu*>* menus_iter = new MenusIterator<Menu*>(menus);
+		while(menus_iter->hasNext())
+		{
+			Menu* one_menu = 	menus_iter->next();
+			cout << "Printing Menu\n";
+			printMenu(one_menu->createIterator());
+		}
 	}
 };
 
@@ -225,7 +250,11 @@ int main(int argc, char const *argv[])
 	Menu* dmenu = new DinnerMenu;
 	Menu* pmenu = new PancakeMenu;
 
-	Waitress* waitress = new Waitress(dmenu,pmenu);
+	vector<Menu*> allMenu;
+	allMenu.push_back(dmenu);
+	allMenu.push_back(pmenu);
+
+	Waitress* waitress = new Waitress(allMenu);
 	waitress->printMenu();
 
 	return 0;

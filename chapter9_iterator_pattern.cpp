@@ -87,27 +87,25 @@ template<typename T>
 class PancakeMenuIterator : public Iterator<T>
 {
 	vector<MenuItem> items;
-	int len;
-	int position{0};
+	vector<MenuItem>::iterator iter;
 public:
-	PancakeMenuIterator(vector<MenuItem>& it, int len)
+	PancakeMenuIterator(vector<MenuItem>& it)
 	{
-		this->len = len;
-		// items.resize(it.size());
-		items = it;
+		this->items = it;
+
+		iter = this->items.begin();
 	}
 
 	bool hasNext()
 	{
-		if(position >= len)
-			return false;
-		else
-			return true;
+		return (iter < items.end());
 	}
 
 	MenuItem next()
 	{
-		return (items[position++]);
+		auto res = *iter;
+		iter++;
+		return res;
 	}
 };
 
@@ -162,7 +160,6 @@ class PancakeMenu : public Menu
 public:
 	PancakeMenu()
 	{
-		menuItems.resize(max_size);		
 		addItem("Berries PC","lele",true,8.99);	
 		addItem("Egg PC","lele",false,9.99);
 	}
@@ -173,12 +170,15 @@ public:
 		if(numItems >= max_size)
 			throw("Max size exceeded\n");
 		else
-			menuItems[numItems++] = *m;
+		{
+			numItems++;
+			menuItems.push_back(*m);
+		}
 	}
 
 	PancakeMenuIterator<MenuItem>* createIterator()
 	{
-		PancakeMenuIterator<MenuItem>* piter  = new PancakeMenuIterator<MenuItem>(menuItems,numItems);
+		PancakeMenuIterator<MenuItem>* piter  = new PancakeMenuIterator<MenuItem>(menuItems);
 		return piter; 
 	}
 };

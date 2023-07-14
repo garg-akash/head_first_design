@@ -5,7 +5,7 @@ using namespace std;
 
 int main(int argc, char const *argv[])
 {
-	int count = 1;
+	int count = 10;
 	GumballMachine gbm(count);
 	gbm.insertQuarter();
 	gbm.turnCrank();

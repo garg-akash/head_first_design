@@ -73,12 +73,28 @@ public:
 	void dispense();	
 };
 
+class WinnerState : public State
+{
+	GumballMachine* gbMachine;
+public:
+	WinnerState(GumballMachine* gbM);
+	
+	void insertQuarter();
+
+	void ejectQuarter();
+
+	void turnCrank();
+
+	void dispense();	
+};
+
 class GumballMachine
 {
 	State* soldOutState;
 	State* noQuarterState;
 	State* hasQuarterState;
 	State* soldState;
+	State* winnerState;
 
 	State* state;
 	int count;
@@ -108,6 +124,8 @@ public:
 	State* getNoQuarterState();
 
 	State* getSoldState();
+
+	State* getWinnerState();
 };
 
 #endif

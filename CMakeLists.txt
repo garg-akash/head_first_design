@@ -5,6 +5,4 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 add_subdirectory(src)
 
 add_executable(test chapter10_state_pattern.cpp)
-target_include_directories(test PUBLIC include)
-target_link_directories(test PRIVATE ${PROJECT_SOURCE_DIR})
 target_link_libraries(test statelib)

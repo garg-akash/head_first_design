@@ -5,10 +5,10 @@
 class State
 {
 public:
-	void insertQuarter();
-	void ejectQuarter();
-	void turnCrank();
-	void dispense();
+	virtual void insertQuarter() = 0;
+	virtual void ejectQuarter() = 0;
+	virtual void turnCrank() = 0;
+	virtual void dispense() = 0;
 };
 
 class GumballMachine;

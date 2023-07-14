@@ -85,7 +85,9 @@ class GumballMachine
 public:
 	GumballMachine();
 
-	GumballMachine(int numBalls);
+	GumballMachine(int);
+
+	~GumballMachine();
 
 	void insertQuarter();
 

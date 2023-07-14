@@ -1,4 +1,4 @@
-#include "state_pattern_header.h"
+#include <state_pattern_header.h>
 #include <iostream>
 
 using namespace std;
@@ -116,31 +116,33 @@ GumballMachine::GumballMachine()
 
 GumballMachine::GumballMachine(int numBalls) : count{numBalls}
 {
-	soldOutState = new SoldOutState(this);
-	noQuarterState = new NoQuarterState(this);
-	hasQuarterState = new HasQuarterState(this);
-	soldState = new SoldState(this);
+	this->soldOutState = new SoldOutState(this);
+	this->noQuarterState = new NoQuarterState(this);
+	this->hasQuarterState = new HasQuarterState(this);
+	this->soldState = new SoldState(this);
 
 	if(numBalls > 0)
-		state = noQuarterState;
+		this->state = noQuarterState;
 	else
-		state = soldOutState;
+		this->state = soldOutState;
 }
+
+GumballMachine::~GumballMachine() = default;
 
 void GumballMachine::insertQuarter()
 {
-	state->insertQuarter();
+	this->state->insertQuarter();
 }
 
 void GumballMachine::ejectQuarter()
 {
-	state->ejectQuarter();
+	this->state->ejectQuarter();
 }
 
 void GumballMachine::turnCrank()
 {
-	state->turnCrank();
-	state->dispense();
+	this->state->turnCrank();
+	this->state->dispense();
 }
 
 void GumballMachine::setState(State* st)

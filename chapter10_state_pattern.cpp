@@ -1,5 +1,5 @@
 #include <iostream>
-#include "state_pattern_header.cpp"
+#include <state_pattern_header.h>
 
 using namespace std;
 

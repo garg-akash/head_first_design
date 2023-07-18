@@ -3,6 +3,11 @@
 
 using namespace std;
 
+void State::refill()
+{
+	std::cout << "Refill doing nothing\n";
+}
+
 SoldOutState::SoldOutState(GumballMachine* gbM) : gbMachine{gbM}
 {
 }
@@ -26,6 +31,11 @@ void SoldOutState::dispense()
 {
 	cout << "Cannot dispense, we are sold out\n";
 }	
+
+void SoldOutState::refill()
+{
+	gbMachine->setState(gbMachine->getNoQuarterState());
+}
 
 NoQuarterState::NoQuarterState(GumballMachine* gbM) : gbMachine{gbM}
 {
@@ -233,4 +243,11 @@ State* GumballMachine::getSoldState()
 State* GumballMachine::getWinnerState()
 {
 	return winnerState;
+}
+
+void GumballMachine::refill(int refCount)
+{
+	count += refCount;
+	cout << "The gumball machine has been refilled...new count : " << count << "\n";
+	this->state->refill();
 }

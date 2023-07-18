@@ -9,6 +9,7 @@ public:
 	virtual void ejectQuarter() = 0;
 	virtual void turnCrank() = 0;
 	virtual void dispense() = 0;
+	virtual void refill();
 };
 
 class GumballMachine;
@@ -26,6 +27,8 @@ public:
 	void turnCrank();
 
 	void dispense();
+	
+	void refill();
 };
 
 class NoQuarterState : public State
@@ -126,6 +129,8 @@ public:
 	State* getSoldState();
 
 	State* getWinnerState();
+
+	void refill(int);
 };
 
 #endif

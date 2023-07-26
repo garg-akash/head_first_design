@@ -26,10 +26,10 @@ public:
 
 class ProxyInternet : public Internet
 {
-	unique_ptr<RealInternet> ri_;
+	unique_ptr<Internet> ri_;
 	set<string> banned;
 public:
-	ProxyInternet(unique_ptr<RealInternet> ri) : ri_(std::move(ri))
+	ProxyInternet(unique_ptr<Internet> ri) : ri_(std::move(ri))
 	{
 		banned.insert("abc.com");
 		banned.insert("xyz.com");
@@ -48,9 +48,9 @@ public:
 
 int main(int argc, char const *argv[])
 {
-	unique_ptr<RealInternet> riptr(new RealInternet());
+	unique_ptr<Internet> riptr(new RealInternet());
 
-	unique_ptr<ProxyInternet> pi = make_unique<ProxyInternet>(std::move(riptr));
+	unique_ptr<Internet> pi = make_unique<ProxyInternet>(std::move(riptr));
 
 	try
 	{

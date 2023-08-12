@@ -2,10 +2,11 @@
 
 using namespace std;
 
+// Duck classes
 class Quackable
 {
 public:
-	virtual void quack() = 0;
+	virtual void quack() {}
 };
 
 class MallardDuck : public Quackable
@@ -35,6 +36,29 @@ public:
 	}
 };
 
+// Decorator to count #quacks
+class QuackCounter : public Quackable
+{
+	Quackable* d;
+	static int numQuacks;
+public:
+	QuackCounter(Quackable* duck)
+	{
+		d = duck;
+	}
+	void quack()
+	{
+		d->quack();
+		numQuacks++;
+	}	
+	static int getQuackCount()
+	{
+		return numQuacks;
+	}
+};
+int QuackCounter::numQuacks = 0;
+
+// Goose classes
 class Goose
 {
 public:
@@ -44,6 +68,7 @@ public:
 	}
 };
 
+// Adapter defined 
 class GooseAdapter : public Quackable
 {
 	Goose* g;
@@ -58,6 +83,32 @@ public:
 	}
 };
 
+class AbstractDuckFactory : public Quackable
+{
+public:
+	virtual Quackable* createMallardDuck() = 0;
+	virtual Quackable* createDuckCall() = 0;
+	virtual Quackable* createRubberDuck() = 0;
+};
+
+class CountingDuckFactory : public AbstractDuckFactory
+{
+public:
+	Quackable* createMallardDuck()
+	{
+		return new QuackCounter(new MallardDuck());
+	}
+	Quackable* createDuckCall()
+	{
+		return new QuackCounter(new DuckCall());
+	}
+	Quackable* createRubberDuck()
+	{
+		return new QuackCounter(new RubberDuck());
+	}
+	
+};
+
 class DuckSimulator
 {
 	void simulate(Quackable* q)
@@ -65,24 +116,27 @@ class DuckSimulator
 		q->quack();
 	}
 public:
-	void simulate()
+	void simulate(AbstractDuckFactory* factory)
 	{
-		cout << "Duck Simulator:\n";
-		Quackable* mallardDuck = new MallardDuck();
-		Quackable* duckCall = new DuckCall();
-		Quackable* rubberDuck = new RubberDuck();
+		cout << "Duck Simulator: with factory & decorator\n";
+		Quackable* mallardDuck = factory->createMallardDuck();
+		Quackable* duckCall = factory->createDuckCall();
+		Quackable* rubberDuck = factory->createRubberDuck();
 		Quackable* gooseDuck = new GooseAdapter(new Goose());
 
 		simulate(mallardDuck);
 		simulate(duckCall);
 		simulate(rubberDuck);
 		simulate(gooseDuck);
+
+		cout << "Number of quacks : " << QuackCounter::getQuackCount() << "\n";
 	}
 };
 
 int main(int argc, char const *argv[])
 {
 	DuckSimulator* sim = new DuckSimulator();
-	sim->simulate();
+	AbstractDuckFactory* fact = new CountingDuckFactory();
+	sim->simulate(fact);
 	return 0;
 }

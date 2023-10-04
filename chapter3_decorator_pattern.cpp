@@ -9,11 +9,10 @@ public:
 		description = "unknown Beverage";
 	}
 	~Beverage() {}
-	std::string getDescription()
+	virtual std::string getDescription()
 	{
 		return description;
 	}
-
 	virtual double cost() = 0;
 	// double cost()
 	// {
@@ -60,12 +59,10 @@ public:
 	Mocha(Beverage* b)
 	{
 		beverage = b;
-		description = b->getDescription() + ", Moch"; // this is fine
 	}
 	~Mocha() {}
 	std::string getDescription()
 	{
-		std::cout << beverage->getDescription() << "!!\n";
 		return beverage->getDescription() + ", Mocha";
 	}
 
@@ -82,7 +79,6 @@ public:
 	Whip(Beverage* b)
 	{
 		beverage = b;
-		// description = "Moch";
 	}
 	~Whip();
 	std::string getDescription()
@@ -100,7 +96,7 @@ int main(int argc, char const *argv[])
 {
 	Beverage* b1 = new Espresso();
 	Beverage* b2 = new Mocha(b1);
-	std::cout << b2->getDescription() << "\n"; // this calls getDescription of Parent class -- issue
+	std::cout << b2->getDescription() << "\n";
 	std::cout << b2->cost() << "\n";  
 	return 0;
 }
